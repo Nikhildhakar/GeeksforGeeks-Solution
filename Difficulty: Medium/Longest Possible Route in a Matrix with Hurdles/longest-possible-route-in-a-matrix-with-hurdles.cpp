@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int n, m;
+    int ans;
+
+    int dx[4] = {-1, 1, 0, 0};
+    int dy[4] = {0, 0, -1, 1};
+
+    void dfs(vector<vector<int>>& mat, vector<vector<bool>>& vis,
+             int x, int y, int xd, int yd, int dist) {
+
+        if (x == xd && y == yd) {
+            ans = max(ans, dist);
+            return;
+        }
+
+        vis[x][y] = true;
+
+        for (int k = 0; k < 4; k++) {
+            int nx = x + dx[k];
+            int ny = y + dy[k];
+
+            if (nx >= 0 && nx < n && ny >= 0 && ny < m &&
+                mat[nx][ny] == 1 && !vis[nx][ny]) {
+
+                dfs(mat, vis, nx, ny, xd, yd, dist + 1);
+            }
+        }
+
+        vis[x][y] = false; // Backtrack
+    }
+
+    int longestPath(vector<vector<int>>& mat, int xs, int ys, int xd, int yd) {
+        n = mat.size();
+        m = mat[0].size();
+
+        if (mat[xs][ys] == 0 || mat[xd][yd] == 0)
+            return -1;
+
+        ans = -1;
+        vector<vector<bool>> vis(n, vector<bool>(m, false));
+
+        dfs(mat, vis, xs, ys, xd, yd, 0);
+
+        return ans;
+    }
+};
